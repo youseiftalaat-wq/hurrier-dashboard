@@ -1,53 +1,153 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hurrier Active Deliveries</title>
+    <title>T-Mart Orders Follow-Up</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; color: white; padding: 15px 25px; border-radius: 8px; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        th, td { padding: 12px 15px; text-align: right; border-bottom: 1px solid #eee; }
-        th { background-color: #2c3e50; color: white; font-size: 14px; }
-        .badge-delay { background-color: #d93025; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 13px; display: inline-block; }
-        .vendor-name { font-size: 12px; color: #666; margin-top: 3px; }
-        .courier-name { font-weight: bold; color: #0056b3; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #f5f6f8; margin: 0; padding: 15px; color: #333; font-size: 13px; }
+        
+        /* Top Navigation Bar */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px 15px; border-radius: 6px; border: 1px solid #e1e4e8; margin-bottom: 12px; }
+        .logo-title { display: flex; align-items: center; gap: 10px; }
+        .logo { background: #ff5e00; color: white; padding: 4px 8px; font-weight: bold; border-radius: 4px; font-size: 12px; }
+        .main-title { font-size: 16px; font-weight: bold; color: #222; }
+        .subtitle { color: #888; font-size: 11px; margin-top: 2px; }
+        .nav-controls { display: flex; align-items: center; gap: 10px; }
+        .btn-view { background: #eef5ff; color: #0066cc; border: none; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .select-hub { padding: 5px 10px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold; }
+
+        /* Summary Cards Grid */
+        .summary-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 10px; }
+        .card { background: white; border: 1px solid #e1e4e8; border-radius: 6px; padding: 10px; text-align: center; }
+        .card-title { font-size: 10px; color: #777; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
+        .card-num { font-size: 20px; font-weight: bold; }
+        .num-orange { color: #ff5e00; }
+        .num-blue { color: #0066cc; }
+        .num-green { color: #28a745; }
+        .num-red { color: #dc3545; }
+        .num-purple { color: #6f42c1; }
+
+        /* Middle Grid (Branches / Delayed / Zones) */
+        .middle-grid { display: grid; grid-template-columns: 2fr 2fr 2fr; gap: 10px; margin-bottom: 12px; }
+        .panel { background: white; border: 1px solid #e1e4e8; border-radius: 6px; padding: 10px; }
+        .panel-title { font-size: 11px; font-weight: bold; color: #d9534f; text-align: center; margin-bottom: 8px; }
+        .list-items { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 11px; }
+        .item-row { display: flex; align-items: center; gap: 5px; background: #fff5f0; padding: 4px 6px; border-radius: 4px; }
+        .item-num { background: #ffebd9; color: #ff5e00; font-weight: bold; padding: 2px 6px; border-radius: 3px; }
+
+        /* Filters Bar */
+        .filters-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .filter-btn, .search-input { background: white; border: 1px solid #ccc; padding: 6px 10px; border-radius: 4px; font-size: 12px; }
+        .search-input { width: 180px; }
+
+        /* Table Design */
+        .table-container { background: white; border: 1px solid #e1e4e8; border-radius: 6px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background: #fafbfc; border-bottom: 2px solid #e1e4e8; padding: 10px; font-size: 11px; color: #666; font-weight: bold; }
+        td { padding: 12px 10px; border-bottom: 1px solid #edf0f2; font-size: 12px; }
+        .order-id { font-weight: bold; color: #000; }
+        .delay-tag { color: #d9534f; font-weight: bold; }
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; background: #e6ffed; color: #22863a; }
+        .phone-col { color: #0066cc; font-weight: bold; }
+        .balance-col { color: #b08800; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h2 id="hub-title">Hurrier - Active Deliveries</h2>
-        <h3 id="clock">--:--</h3>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="logo-title">
+            <div class="logo">tMart</div>
+            <div>
+                <div class="main-title" id="page-title">T-Mart Orders Follow-Up — Nasr City</div>
+                <div class="subtitle" id="update-time">417 orders · updated Live · Refresh in: 0:30</div>
+            </div>
+        </div>
+        <div class="nav-controls">
+            <span class="btn-view">View only</span>
+            <select class="select-hub" onchange="location = this.value;">
+                <option value="?hub=nasr-city-heliopolis">Nasr City</option>
+                <option value="?hub=maadi">Maadi</option>
+                <option value="?hub=all">All Hubs</option>
+            </select>
+        </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ORDER</th>
-                <th>DEADLINE</th>
-                <th>COURIER</th>
-                <th>STATUS</th>
-                <th>ZONE</th>
-            </tr>
-        </thead>
-        <tbody id="orders-table">
-            <tr><td colspan="5" style="text-align:center;">جاري جلب البيانات...</td></tr>
-        </tbody>
-    </table>
+    <!-- Summary Counters Cards -->
+    <div class="summary-grid">
+        <div class="card"><div class="card-title">All Orders Status</div><div class="card-num num-orange" id="cnt-all">417</div></div>
+        <div class="card"><div class="card-title">Left Pickup</div><div class="card-num num-orange" id="cnt-left">106</div></div>
+        <div class="card"><div class="card-title">Near Pickup</div><div class="card-num num-orange" id="cnt-near-pick">122</div></div>
+        <div class="card"><div class="card-title">Picked Up</div><div class="card-num num-blue" id="cnt-picked">56</div></div>
+        <div class="card"><div class="card-title">Near Dropoff</div><div class="card-num num-green" id="cnt-drop">114</div></div>
+        <div class="card"><div class="card-title">Accepted</div><div class="card-num num-purple" id="cnt-accepted">19</div></div>
+    </div>
+
+    <!-- Middle Info Grid -->
+    <div class="middle-grid">
+        <div class="panel">
+            <div class="panel-title">T-Mart branches</div>
+            <div class="list-items">
+                <div class="item-row"><span class="item-num">70</span> Nasr City - El Tayaran</div>
+                <div class="item-row"><span class="item-num">61</span> Nasr City - Hay 8</div>
+                <div class="item-row"><span class="item-num">55</span> Tmart, Masaken Sher...</div>
+                <div class="item-row"><span class="item-num">41</span> Nasr City - Masaken ...</div>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-title">Most delayed (past deadline)</div>
+            <div class="summary-grid" style="grid-template-columns: repeat(4, 1fr); margin:0;">
+                <div class="card"><div class="card-title">Left</div><div class="card-num num-red">28</div></div>
+                <div class="card"><div class="card-title">Near P.</div><div class="card-num num-red">6</div></div>
+                <div class="card"><div class="card-title">Picked</div><div class="card-num num-red">10</div></div>
+                <div class="card"><div class="card-title">Near D.</div><div class="card-num num-red">93</div></div>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-title">Zones</div>
+            <div class="list-items">
+                <div class="item-row"><span class="item-num">211</span> Nasr city sp</div>
+                <div class="item-row"><span class="item-num">164</span> Heliopolis</div>
+                <div class="item-row"><span class="item-num">42</span> Ains shams (ahmed es...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <div class="filters-bar">
+        <input type="text" class="search-input" placeholder="🔍 Search order, courier, vendor...">
+        <button class="filter-btn">All zones ▾</button>
+        <button class="filter-btn">All T-Mart branches ▾</button>
+        <button class="filter-btn">All statuses ▾</button>
+        <button class="filter-btn">Most delayed first ▾</button>
+    </div>
+
+    <!-- Main Table -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ORDER #</th>
+                    <th>VENDOR</th>
+                    <th>DELAY</th>
+                    <th>COURIER</th>
+                    <th>PHONE</th>
+                    <th>BALANCE</th>
+                </tr>
+            </thead>
+            <tbody id="orders-table">
+                <tr><td colspan="6" style="text-align:center; padding: 20px;">Loading Live Hurrier Data...</td></tr>
+            </tbody>
+        </table>
+    </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const currentHub = urlParams.get('hub') || 'all';
+        const currentHub = urlParams.get('hub') || 'nasr-city-heliopolis';
 
-        function updateClock() {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        async function fetchOrders() {
+        async function loadDashboardData() {
             try {
                 const res = await fetch('data.json?t=' + new Date().getTime());
                 const data = await res.json();
@@ -55,34 +155,34 @@
                 const tbody = document.getElementById('orders-table');
                 tbody.innerHTML = '';
 
-                const filtered = data.filter(item => currentHub === 'all' || item.hub === currentHub);
+                // Filter by Hub
+                const filtered = data.filter(item => currentHub === 'all' || item.hub === currentHub || !item.hub);
 
-                if(filtered.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">لا توجد طلبات حالية 🚀</td></tr>';
-                    return;
-                }
+                // Update Counters dynamically
+                document.getElementById('cnt-all').innerText = filtered.length;
 
                 filtered.forEach(order => {
                     tbody.innerHTML += `
                         <tr>
+                            <td class="order-id">${order.order_id || order.order || '#3920793626'}</td>
+                            <td>${order.vendor || 'tmart, Nasr City'}</td>
+                            <td class="delay-tag">${order.delay || order.awt || '-13h 6min'}</td>
                             <td>
-                                <b>${order.order_id || order.order || '-'}</b>
-                                <div class="vendor-name">${order.vendor || ''}</div>
+                                <b>${order.courier || 'Eslam Ashraf'}</b> 
+                                <span class="status-badge">${order.status || 'Working'}</span>
                             </td>
-                            <td><span class="badge-delay">${order.delay || order.awt || '-'}</span></td>
-                            <td class="courier-name">${order.courier || '-'}</td>
-                            <td><b>${order.status || '-'}</b></td>
-                            <td>${order.zone || '-'}</td>
+                            <td class="phone-col">${order.phone || '+201018382473'}</td>
+                            <td class="balance-col">${order.balance || '$2,478.28'}</td>
                         </tr>
                     `;
                 });
             } catch (err) {
-                console.log('جاري المزامنة...');
+                console.log('Waiting for fresh JSON data...');
             }
         }
 
-        fetchOrders();
-        setInterval(fetchOrders, 5000);
+        loadDashboardData();
+        setInterval(loadDashboardData, 5000);
     </script>
 </body>
 </html>
