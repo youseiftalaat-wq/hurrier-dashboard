@@ -1,5 +1,26 @@
-import json
-
-# تجديد قائمة الأوردرات وحفظها في data.json
-with open("data.json", "w", encoding="utf-8") as f:
-    json.dump(extracted_orders, f, ensure_ascii=False, indent=2)
+[
+  {
+    "order_id": "#6590",
+    "phone": "+201149383598",
+    "window": "B-110",
+    "time": "1 mins",
+    "awt": "9 mins",
+    "hub": "all"
+  },
+  {
+    "order_id": "#6597",
+    "phone": "+201020105643",
+    "window": "S-20",
+    "time": "6 mins",
+    "awt": "9 mins",
+    "hub": "all"
+  },
+  {
+    "order_id": "#6601",
+    "phone": "+201207777065",
+    "window": "EDR-38",
+    "time": "4 mins",
+    "awt": "8 mins",
+    "hub": "all"
+  }
+]
