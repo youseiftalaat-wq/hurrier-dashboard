@@ -1,0 +1,5 @@
+import json
+
+# تجديد قائمة الأوردرات وحفظها في data.json
+with open("data.json", "w", encoding="utf-8") as f:
+    json.dump(extracted_orders, f, ensure_ascii=False, indent=2)
