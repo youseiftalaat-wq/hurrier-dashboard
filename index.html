@@ -66,13 +66,13 @@
                     tbody.innerHTML += `
                         <tr>
                             <td>
-                                <b>${order.order_id}</b>
-                                <div class="vendor-name">${order.vendor}</div>
+                                <b>${order.order_id || order.order || '-'}</b>
+                                <div class="vendor-name">${order.vendor || ''}</div>
                             </td>
-                            <td><span class="badge-delay">${order.delay}</span></td>
-                            <td class="courier-name">${order.courier}</td>
-                            <td><b>${order.status}</b></td>
-                            <td>${order.zone}</td>
+                            <td><span class="badge-delay">${order.delay || order.awt || '-'}</span></td>
+                            <td class="courier-name">${order.courier || '-'}</td>
+                            <td><b>${order.status || '-'}</b></td>
+                            <td>${order.zone || '-'}</td>
                         </tr>
                     `;
                 });
