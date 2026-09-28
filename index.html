@@ -62,7 +62,7 @@
             <div class="logo">tMart</div>
             <div>
                 <div class="main-title" id="page-title">T-Mart Orders Follow-Up — Nasr City</div>
-                <div class="subtitle" id="update-time">417 orders · updated Live · Refresh in: 0:30</div>
+                <div class="subtitle" id="update-time">Live Orders Update · Refresh in: 0:30</div>
             </div>
         </div>
         <div class="nav-controls">
@@ -77,40 +77,37 @@
 
     <!-- Summary Counters Cards -->
     <div class="summary-grid">
-        <div class="card"><div class="card-title">All Orders Status</div><div class="card-num num-orange" id="cnt-all">417</div></div>
-        <div class="card"><div class="card-title">Left Pickup</div><div class="card-num num-orange" id="cnt-left">106</div></div>
-        <div class="card"><div class="card-title">Near Pickup</div><div class="card-num num-orange" id="cnt-near-pick">122</div></div>
-        <div class="card"><div class="card-title">Picked Up</div><div class="card-num num-blue" id="cnt-picked">56</div></div>
-        <div class="card"><div class="card-title">Near Dropoff</div><div class="card-num num-green" id="cnt-drop">114</div></div>
-        <div class="card"><div class="card-title">Accepted</div><div class="card-num num-purple" id="cnt-accepted">19</div></div>
+        <div class="card"><div class="card-title">All Orders Status</div><div class="card-num num-orange" id="cnt-all">0</div></div>
+        <div class="card"><div class="card-title">Left Pickup</div><div class="card-num num-orange" id="cnt-left">0</div></div>
+        <div class="card"><div class="card-title">Near Pickup</div><div class="card-num num-orange" id="cnt-near-pick">0</div></div>
+        <div class="card"><div class="card-title">Picked Up</div><div class="card-num num-blue" id="cnt-picked">0</div></div>
+        <div class="card"><div class="card-title">Near Dropoff</div><div class="card-num num-green" id="cnt-drop">0</div></div>
+        <div class="card"><div class="card-title">Accepted</div><div class="card-num num-purple" id="cnt-accepted">0</div></div>
     </div>
 
     <!-- Middle Info Grid -->
     <div class="middle-grid">
         <div class="panel">
             <div class="panel-title">T-Mart branches</div>
-            <div class="list-items">
-                <div class="item-row"><span class="item-num">70</span> Nasr City - El Tayaran</div>
-                <div class="item-row"><span class="item-num">61</span> Nasr City - Hay 8</div>
-                <div class="item-row"><span class="item-num">55</span> Tmart, Masaken Sher...</div>
-                <div class="item-row"><span class="item-num">41</span> Nasr City - Masaken ...</div>
+            <div class="list-items" id="branches-list">
+                <div class="item-row"><span class="item-num">-</span> Nasr City - El Tayaran</div>
+                <div class="item-row"><span class="item-num">-</span> Nasr City - Hay 8</div>
             </div>
         </div>
         <div class="panel">
             <div class="panel-title">Most delayed (past deadline)</div>
             <div class="summary-grid" style="grid-template-columns: repeat(4, 1fr); margin:0;">
-                <div class="card"><div class="card-title">Left</div><div class="card-num num-red">28</div></div>
-                <div class="card"><div class="card-title">Near P.</div><div class="card-num num-red">6</div></div>
-                <div class="card"><div class="card-title">Picked</div><div class="card-num num-red">10</div></div>
-                <div class="card"><div class="card-title">Near D.</div><div class="card-num num-red">93</div></div>
+                <div class="card"><div class="card-title">Left</div><div class="card-num num-red">0</div></div>
+                <div class="card"><div class="card-title">Near P.</div><div class="card-num num-red">0</div></div>
+                <div class="card"><div class="card-title">Picked</div><div class="card-num num-red">0</div></div>
+                <div class="card"><div class="card-title">Near D.</div><div class="card-num num-red">0</div></div>
             </div>
         </div>
         <div class="panel">
             <div class="panel-title">Zones</div>
-            <div class="list-items">
-                <div class="item-row"><span class="item-num">211</span> Nasr city sp</div>
-                <div class="item-row"><span class="item-num">164</span> Heliopolis</div>
-                <div class="item-row"><span class="item-num">42</span> Ains shams (ahmed es...</div>
+            <div class="list-items" id="zones-list">
+                <div class="item-row"><span class="item-num">-</span> Nasr city sp</div>
+                <div class="item-row"><span class="item-num">-</span> Heliopolis</div>
             </div>
         </div>
     </div>
@@ -145,7 +142,7 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const currentHub = urlParams.get('hub') || 'nasr-city-heliopolis';
+        const currentHub = urlParams.get('hub') || 'all';
 
         async function loadDashboardData() {
             try {
@@ -155,24 +152,22 @@
                 const tbody = document.getElementById('orders-table');
                 tbody.innerHTML = '';
 
-                // Filter by Hub
                 const filtered = data.filter(item => currentHub === 'all' || item.hub === currentHub || !item.hub);
 
-                // Update Counters dynamically
                 document.getElementById('cnt-all').innerText = filtered.length;
 
                 filtered.forEach(order => {
                     tbody.innerHTML += `
                         <tr>
-                            <td class="order-id">${order.order_id || order.order || '#3920793626'}</td>
-                            <td>${order.vendor || 'tmart, Nasr City'}</td>
-                            <td class="delay-tag">${order.delay || order.awt || '-13h 6min'}</td>
+                            <td class="order-id">${order.order_id || order.order || '-'}</td>
+                            <td>${order.vendor || 'tMart'}</td>
+                            <td class="delay-tag">${order.delay || order.awt || '-'}</td>
                             <td>
-                                <b>${order.courier || 'Eslam Ashraf'}</b> 
-                                <span class="status-badge">${order.status || 'Working'}</span>
+                                <b>${order.courier || '-'}</b> 
+                                <span class="status-badge">${order.status || 'Active'}</span>
                             </td>
-                            <td class="phone-col">${order.phone || '+201018382473'}</td>
-                            <td class="balance-col">${order.balance || '$2,478.28'}</td>
+                            <td class="phone-col">${order.phone || '-'}</td>
+                            <td class="balance-col">${order.balance || '-'}</td>
                         </tr>
                     `;
                 });
